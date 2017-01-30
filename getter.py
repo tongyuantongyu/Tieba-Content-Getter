@@ -144,7 +144,7 @@ def readtasks(f,filemode=True):
             pastline = None
         except IndexError:
             pastline = line
-    processlist = list(set(processlist)).remove(None)
+    processlist = list(set(processlist))
     try:
         processlist.sort(key=lambda d: int(re.findall('(\d{1,10})(?!\d)',d[1])[0]))
     except:
@@ -200,10 +200,14 @@ def createbook(title, content):
 if __name__ == '__main__':
     f = open('linklist.txt', mode='r')
     (maintitle,processlist) = readtasks(f)
-    os.mkdir(maintitle)
+    try:
+        os.mkdir(maintitle)
+    except FileExistsError:
+        print('目标文件夹已存在，文件可能被覆盖。')
     if makeepub is False:
         pool.map(process, processlist)
     else:
         content = pool.map(process, processlist)
+        content = [i for i in content if not i is None]
         createbook(maintitle, content)
     subprocess.call("pause", shell=True)
