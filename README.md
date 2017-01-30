@@ -7,7 +7,7 @@ Put words contains the links to catch into linklist.txt at the same directory of
 
 
 #Format of linklist.txt:
-title
+title                                                                     
 the first line should be the title. All files will be saved in ./title/ folder.
 
 filenamehttp://tieba.baidu.com/p/(pageid)                           
