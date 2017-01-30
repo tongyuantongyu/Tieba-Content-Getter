@@ -16,9 +16,11 @@ threads = 32
 #忽略单独链接
 ignoresinglelink = True
 #增加原作者信息
-orginfo = False
+orginfo = True
 #创建epub
 makeepub = True
+#汉字数字化排序
+hznum = True
 
 
 #除非理解含义否则不要改动！
@@ -29,6 +31,7 @@ dirname = os.getcwd()
 warn = '本文件为自动抓取程序生成的文件'
 about = b'PGh0bWw+PGhlYWQ+PC9oZWFkPjxib2R5PjxoMz7mnKzkuabkv6Hmga88L2gzPjxwPuacrOS5pueUseiEmuacrOiHquWKqOS7jueZvuW6pui0tOWQp+aKk+WPluW5tueUn+aIkOOAgjwvcD4KPHA+5Y+v6IO95Ye6546w5ZCE56eN5o6S54mI6Zeu6aKY6K+36Ieq6KGM5paf6YWM5L2/55So44CCPC9wPgo8cD7or7flsIrph43ljp/kvZzogIXlj4rnv7vor5HogIXnmoTlirPliqjmiJDmnpzvvIE8L3A+PC9ib2R5PjwvaHRtbD4='
 style = b'CkBuYW1lc3BhY2UgZXB1YiAiaHR0cDovL3d3dy5pZHBmLm9yZy8yMDA3L29wcyI7CmJvZHkgewogICAgZm9udC1mYW1pbHk6IENhbWJyaWEsIExpYmVyYXRpb24gU2VyaWYsIEJpdHN0cmVhbSBWZXJhIFNlcmlmLCBHZW9yZ2lhLCBUaW1lcywgVGltZXMgTmV3IFJvbWFuLCBzZXJpZjsKfQpoMiB7CiAgICAgdGV4dC1hbGlnbjogbGVmdDsKICAgICB0ZXh0LXRyYW5zZm9ybTogdXBwZXJjYXNlOwogICAgIGZvbnQtd2VpZ2h0OiAyMDA7ICAgICAKfQpvbCB7CiAgICAgICAgbGlzdC1zdHlsZS10eXBlOiBub25lOwp9Cm9sID4gbGk6Zmlyc3QtY2hpbGQgewogICAgICAgIG1hcmdpbi10b3A6IDAuM2VtOwp9Cm5hdltlcHVifHR5cGV+PSd0b2MnXSA+IG9sID4gbGkgPiBvbCAgewogICAgbGlzdC1zdHlsZS10eXBlOnNxdWFyZTsKfQpuYXZbZXB1Ynx0eXBlfj0ndG9jJ10gPiBvbCA+IGxpID4gb2wgPiBsaSB7CiAgICAgICAgbWFyZ2luLXRvcDogMC4zZW07Cn0K'
+hznuml = [('九千', '9'), ('八千', '8'), ('七千', '7'), ('六千', '6'), ('五千', '5'), ('四千', '4'), ('三千', '3'), ('两千', '2'), ('二千', '2'), ('一千', '1'), ('千', '1'), ('九百', '9'), ('八百', '8'), ('七百', '7'), ('六百', '6'), ('五百', '5'), ('四百', '4'), ('三百', '3'), ('二百', '2'), ('一百', '1'), ('百', '1'), ('九十', '9'), ('八十', '8'), ('七十', '7'), ('六十', '6'), ('五十', '5'), ('四十', '4'), ('三十', '3'), ('二十', '2'), ('一十', '1'), ('十', '1'), ('九', '9'), ('八', '8'), ('七', '7'), ('六', '6'), ('五', '5'), ('四', '4'), ('三', '3'), ('二', '2'), ('一', '1'), ('零', '0')]
 
 
 def getpage(url, ht=htmlparser, hd=headers):
@@ -145,10 +148,12 @@ def readtasks(f,filemode=True):
         except IndexError:
             pastline = line
     processlist = list(set(processlist))
-    try:
-        processlist.sort(key=lambda d: int(re.findall('(\d{1,10})(?!\d)',d[1])[0]))
-    except:
-        processlist.sort()
+#    try
+    choice = input('请选择排序方式:0.字符串排序 1.首数字排序 2.次数字排序 3.章-话排序')
+    processlist.sort(key=lambda x: getfilenum(x[1], choice))
+#    except:
+#        print('选择的方案排序失败!使用字符串排序方案。')
+#        processlist.sort()
     if filemode is True:
         return (maintitle,processlist)
     else:
@@ -195,6 +200,36 @@ def createbook(title, content):
     book.spine = ['nav'] + conlist
     epub.write_epub(dirname + '\\' + title + '\\' + title + '.epub', book, {})
     print('Epub制作成功。')
+
+
+def hztonum(instr):
+    instr2 = re.findall('[零一二三四五六七八九十百千]{1,20}', instr)
+    if instr2 == []:
+        return instr
+    else:
+        instr = instr2[0]
+    if instr[-1] == '千':
+        instr = instr.replace('千', '000')
+    if instr[-1] == '百':
+        instr = instr.replace('百', '00')
+    if instr[-1] == '十':
+        instr = instr.replace('十', '0')
+    for i in hznuml:
+        instr = instr.replace(i[0], i[1])
+    return instr
+
+
+def getfilenum(instr, choice):
+    if hznum is True:
+        instr = hztonum(instr)
+    if choice == '0':
+        return None
+    if choice == '1':
+        return int(re.findall('(\d{1,10})(?!\d)',instr)[0])
+    if choice == '2':
+        return int(re.findall('(\d{1,10})(?!\d)',instr)[1])
+    if choice == '3':
+        return int(''.join([i.zfill(5) for i in re.findall('(\d{1,10})(?!\d)',instr)[:2]]))
 
 
 if __name__ == '__main__':
