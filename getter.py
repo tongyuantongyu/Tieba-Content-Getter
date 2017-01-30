@@ -144,8 +144,11 @@ def readtasks(f,filemode=True):
             pastline = None
         except IndexError:
             pastline = line
-    processlist = list(set(processlist))
-    processlist.sort(key=lambda d: int(re.findall('(\d{1,10})(?!\d)',d[1])[0]))
+    processlist = list(set(processlist)).remove(None)
+    try:
+        processlist.sort(key=lambda d: int(re.findall('(\d{1,10})(?!\d)',d[1])[0]))
+    except:
+        processlist.sort()
     if filemode is True:
         return (maintitle,processlist)
     else:
