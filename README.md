@@ -7,12 +7,9 @@ Put words contains the links to catch into linklist.txt at the same directory of
 #Format of linklist.txt:
 title
   # the first line should be the title. All files will be saved in ./title/ folder.
-filenamehttp://tieba.baidu.com/p/(pageid)
-  #filename will be the name of the txt file.the link should be put beside.
-(otherword): Web 211：http://tieba.baidu.com/p/(pageid)(otherword)
-  #word before': ',word after link,illegal characters of filename spaces and full'：' can be automaticly removed.
-$^%^&#%&^%$&*&^$&%&*
-  #those lines that don't contain a link will be automaticly ignored.
+filenamehttp://tieba.baidu.com/p/(pageid)                           #filename will be the name of the txt file.the link should be put beside.
+(otherword): Web 211：http://tieba.baidu.com/p/(pageid)(otherword)  #word before': ',word after link,illegal characters of filename spaces and full'：' can be automaticly removed.
+(otherword)                                                         #those lines that don't contain a link will be automaticly ignored.
 
 #Dependencies:
 This script requires python3.
