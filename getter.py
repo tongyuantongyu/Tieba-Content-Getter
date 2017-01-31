@@ -19,6 +19,8 @@ ignoresinglelink = True
 orginfo = True
 #创建epub
 makeepub = True
+#创建总txt
+maketxt = True
 #汉字数字化排序
 hznum = True
 
@@ -30,6 +32,7 @@ pool = tp(processes=threads)
 dirname = os.getcwd()
 warn = '本文件为自动抓取程序生成的文件'
 about = b'PGh0bWw+PGhlYWQ+PC9oZWFkPjxib2R5PjxoMz7mnKzkuabkv6Hmga88L2gzPjxwPuacrOS5pueUseiEmuacrOiHquWKqOS7jueZvuW6pui0tOWQp+aKk+WPluW5tueUn+aIkOOAgjwvcD4KPHA+5Y+v6IO95Ye6546w5ZCE56eN5o6S54mI6Zeu6aKY6K+36Ieq6KGM5paf6YWM5L2/55So44CCPC9wPgo8cD7or7flsIrph43ljp/kvZzogIXlj4rnv7vor5HogIXnmoTlirPliqjmiJDmnpzvvIE8L3A+PC9ib2R5PjwvaHRtbD4='
+tabout = b'5pys5Lmm5L+h5oGvCuacrOS5pueUseiEmuacrOiHquWKqOS7jueZvuW6pui0tOWQp+aKk+WPluW5tueUn+aIkOOAggrlj6/og73lh7rnjrDlkITnp43mjpLniYjpl67popjor7foh6rooYzmlp/phYzkvb/nlKjjgIIK6K+35bCK6YeN5Y6f5L2c6ICF5Y+K57+76K+R6ICF55qE5Yqz5Yqo5oiQ5p6c77yB'
 style = b'CkBuYW1lc3BhY2UgZXB1YiAiaHR0cDovL3d3dy5pZHBmLm9yZy8yMDA3L29wcyI7CmJvZHkgewogICAgZm9udC1mYW1pbHk6IENhbWJyaWEsIExpYmVyYXRpb24gU2VyaWYsIEJpdHN0cmVhbSBWZXJhIFNlcmlmLCBHZW9yZ2lhLCBUaW1lcywgVGltZXMgTmV3IFJvbWFuLCBzZXJpZjsKfQpoMiB7CiAgICAgdGV4dC1hbGlnbjogbGVmdDsKICAgICB0ZXh0LXRyYW5zZm9ybTogdXBwZXJjYXNlOwogICAgIGZvbnQtd2VpZ2h0OiAyMDA7ICAgICAKfQpvbCB7CiAgICAgICAgbGlzdC1zdHlsZS10eXBlOiBub25lOwp9Cm9sID4gbGk6Zmlyc3QtY2hpbGQgewogICAgICAgIG1hcmdpbi10b3A6IDAuM2VtOwp9Cm5hdltlcHVifHR5cGV+PSd0b2MnXSA+IG9sID4gbGkgPiBvbCAgewogICAgbGlzdC1zdHlsZS10eXBlOnNxdWFyZTsKfQpuYXZbZXB1Ynx0eXBlfj0ndG9jJ10gPiBvbCA+IGxpID4gb2wgPiBsaSB7CiAgICAgICAgbWFyZ2luLXRvcDogMC4zZW07Cn0K'
 hznuml = [('九千', '9'), ('八千', '8'), ('七千', '7'), ('六千', '6'), ('五千', '5'), ('四千', '4'), ('三千', '3'), ('两千', '2'), ('二千', '2'), ('一千', '1'), ('千', '1'), ('九百', '9'), ('八百', '8'), ('七百', '7'), ('六百', '6'), ('五百', '5'), ('四百', '4'), ('三百', '3'), ('二百', '2'), ('一百', '1'), ('百', '1'), ('九十', '9'), ('八十', '8'), ('七十', '7'), ('六十', '6'), ('五十', '5'), ('四十', '4'), ('三十', '3'), ('二十', '2'), ('一十', '1'), ('十', '1'), ('九', '9'), ('八', '8'), ('七', '7'), ('六', '6'), ('五', '5'), ('四', '4'), ('三', '3'), ('二', '2'), ('一', '1'), ('零', '0')]
 
@@ -54,19 +57,7 @@ def getword(page, info=''):
 
 def pages(page):
     '''读取页面数'''
-    pagenum = page.find('li', class_='l_pager pager_theme_4 pb_list_pager').find_all('a')
-    if len(pagenum) == 0:
-        return 1
-    else:
-        b = []
-        page = [a.get_text() for a in pagenum]
-        for a in page:
-            try:
-                b.append(int(a))
-            except ValueError:
-                pass
-        b.sort()
-        return b[-1]
+    return int(page.find('span', class_='red', style=None).get_text())
 
 
 def getpages(link):
@@ -113,7 +104,7 @@ def process(protuple):
     g = open(dirname + '\\' + maintitle + '\\' + protuple[1] + '.txt', mode='wb')
     g.write(word.encode('utf-8'))
     print('页面{0}抓取成功,保存为{1}.txt'.format(protuple[0], protuple[1]))
-    if makeepub is True:
+    if makeepub or maketxt is True:
         return (protuple[1], word)
 
 
@@ -202,6 +193,18 @@ def createbook(title, content):
     print('Epub制作成功。')
 
 
+def makeatxt(title, content):
+    print('制作合集TXT选项已开启，正在制作txt。')
+    con = []
+    con.append(base64.b64decode(tabout).decode('utf-8') + '\r\n\r\n\r\n\r\n\r\n\r\n')
+    for i in content:
+        con.append(i[0] + '\r\n\r\n' + i[1] + '\r\n\r\n\r\n')
+    fi = ''.join(con)
+    g = open(dirname + '\\' + title + '\\' + title + '.txt', 'wb')
+    g.write(fi.encode('utf-8'))
+    print('合集TXT制作成功。')
+
+
 def hztonum(instr):
     instr2 = re.findall('[零一二三四五六七八九十百千]{1,20}', instr)
     if instr2 == []:
@@ -225,24 +228,27 @@ def getfilenum(instr, choice):
     if choice == '0':
         return None
     if choice == '1':
-        return int(re.findall('(\d{1,10})(?!\d)',instr)[0])
+        return int(re.findall('(\d{1,10})(?!\d)', instr)[0])
     if choice == '2':
-        return int(re.findall('(\d{1,10})(?!\d)',instr)[1])
+        return int(re.findall('(\d{1,10})(?!\d)', instr)[1])
     if choice == '3':
-        return int(''.join([i.zfill(5) for i in re.findall('(\d{1,10})(?!\d)',instr)[:2]]))
+        return int(''.join([i.zfill(5) for i in re.findall('(\d{1,10})(?!\d)', instr)[:2]]))
 
 
 if __name__ == '__main__':
     f = open('linklist.txt', mode='r')
-    (maintitle,processlist) = readtasks(f)
+    (maintitle, processlist) = readtasks(f)
     try:
         os.mkdir(maintitle)
     except FileExistsError:
         print('目标文件夹已存在，文件可能被覆盖。')
-    if makeepub is False:
+    if makeepub and maketxt is False:
         pool.map(process, processlist)
     else:
         content = pool.map(process, processlist)
-        content = [i for i in content if not i is None]
-        createbook(maintitle, content)
+        content = [i for i in content if i is not None]
+        if makeepub is True:
+            createbook(maintitle, content)
+        if maketxt is True:
+            makeatxt(maintitle, content)
     subprocess.call("pause", shell=True)
