@@ -36,7 +36,7 @@
 ## 支持格式举例
 
 1. <br>
-  [otherword][num][title]<br>
+  [otherword][num][title]<br>
   http://tieba.baidu.com/p/0000000000<br>
 2. <br>
   [otherword][num][title]http://tieba.baidu.com/p/0000000000<br>
