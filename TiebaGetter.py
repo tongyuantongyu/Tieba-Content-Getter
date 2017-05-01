@@ -32,7 +32,8 @@ validreply = 200
 # 除非理解含义否则不要改动！
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2922.1 Safari/537.36'}
 htmlparser = 'lxml'
-p = {"http": "http://127.0.0.1:8787", "https": "https://127.0.0.1:8787"}
+p = None
+# p = {"http": "http://127.0.0.1:8787", "https": "https://127.0.0.1:8787"}
 pool = tp(processes=threads)
 dirname = os.getcwd()
 warn = '本文件为自动抓取程序生成的文件'
