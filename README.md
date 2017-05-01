@@ -1,14 +1,14 @@
-# 贴吧贴子抓取器<br>
+# 贴吧贴子抓取器
 <br>
 本程序出于抓取贴吧内小说为目的制作，可能无法正常运行于其他场景。<br>
 <br>
-## 直接使用方法<br>
+## 直接使用方法
 确认Python3以及所需package正确安装，按照程序提示操作即可。<br>
-### 注意事项<br>
+### 注意事项
 1. 整合贴需要满足一定的格式才能够被正确抓取。详细要求请见下<br>
 2. 标题不要出现特殊符号否则可能出现各种无法预料的问题<br>
 <br>
-## 高级设置<br>
+## 高级设置
 程序头部可以设置各种参数并附有解释。此处给出更加详细的解释。<br>
  getinline = False<br>
   是否检查贴子内包含的指向其他贴子的链接（具体例子见OSO吧）<br>
@@ -29,32 +29,32 @@
  validreply = 200<br>
   有效回复值（应对非楼主提供翻译情况。楼主发言不进行过滤）<br>
 <br>
-## 支持格式举例<br>
-1. <br>
+## 支持格式举例
+1. 
   [otherword][num][title]<br>
   http://tieba.baidu.com/p/0000000000<br>
-2. <br>
+2. 
   [otherword][num][title]http://tieba.baidu.com/p/0000000000<br>
-3. <br>
+3. 
   auser: [other][num][title]http://tieba.baidu.com/p/0000000000<br>
   <br>
-##### 本程序利用re模块，有较强的适应能力，但不保证非以上格式的情况可以被正确抓取<br>
-##### 标题中的半角特殊符号可能导致不可预期的问题<br>
+##### 本程序利用re模块，有较强的适应能力，但不保证非以上格式的情况可以被正确抓取
+##### 标题中的半角特殊符号可能导致不可预期的问题
 <br>
-## 必须模块<br>
+## 必须模块
 本程序需要下列python模块才能正常运行<br>
 requests<br>
 BeautifulSoup4<br>
 ebooklib<br>
 <br>
-## 已知问题<br>
-1. 有时会出现如下错误：<br>
+## 已知问题
+1. 有时会出现如下错误：
   UserWarning: "b'...'" looks like a filename, not markup. You shouldprobably open this file and pass the filehandle intoBeautiful Soup.<br>
   目前并未发现不良后果，暂不处理<br>
-2. 当有多个贴子指定了同一标题时会出现如下错误<br>
+2. 当有多个贴子指定了同一标题时会出现如下错误
   UserWarning: Duplicate name: 'EPUB/xxx.xhtml'<br>
   不属于程序设计问题，暂不处理<br>
   <br>
-## 暂未完成功能<br>
+## 暂未完成功能
 <br>
 制作存档系统以避免更新后重复抓取内容。<br>
